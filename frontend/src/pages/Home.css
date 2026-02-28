@@ -1,0 +1,163 @@
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.navbar {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px 0;
+}
+
+.nav-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.nav-brand .medical-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.logout-button {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.home-content {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 24px;
+}
+
+.welcome-card {
+  background: white;
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-card h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-message {
+  font-size: 18px;
+  color: #4a5568;
+  margin-bottom: 32px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #718096;
+  min-width: 80px;
+}
+
+.info-value {
+  color: #2d3748;
+  font-size: 16px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+@media (max-width: 640px) {
+  .welcome-card {
+    padding: 32px 24px;
+  }
+
+  .welcome-card h1 {
+    font-size: 28px;
+  }
+
+  .nav-content {
+    padding: 0 16px;
+  }
+
+  .welcome-card {
+    padding: 24px 20px;
+  }
+
+  .welcome-card h1 {
+    font-size: 24px;
+  }
+
+  .welcome-card p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-card {
+    padding: 20px 16px;
+  }
+
+  .welcome-card h1 {
+    font-size: 22px;
+  }
+
+  .nav-content {
+    padding: 0 12px;
+  }
+
+  .brand-text {
+    font-size: 20px;
+  }
+}
+}
+
+

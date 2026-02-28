@@ -1,0 +1,505 @@
+{
+  "info": {
+    "name": "Medify247 API - Complete Collection",
+    "description": "Complete API collection for Medify247 Healthcare Platform with approval flows",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "doctor_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "hospital_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Patient",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('patient_token', response.data.token);",
+                  "        pm.collectionVariables.set('token', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"+1234567890\",\n  \"password\": \"password123\",\n  \"dateOfBirth\": \"1990-01-15\",\n  \"gender\": \"male\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        const role = response.data.user.role;",
+                  "        if (role === 'patient') {",
+                  "            pm.collectionVariables.set('patient_token', response.data.token);",
+                  "        } else if (role === 'doctor') {",
+                  "            pm.collectionVariables.set('doctor_token', response.data.token);",
+                  "        } else if (role === 'hospital_admin') {",
+                  "            pm.collectionVariables.set('hospital_token', response.data.token);",
+                  "        } else if (role === 'super_admin') {",
+                  "            pm.collectionVariables.set('admin_token', response.data.token);",
+                  "        }",
+                  "        pm.collectionVariables.set('token', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@medify247.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctor Registration",
+      "item": [
+        {
+          "name": "Register Doctor (Standalone)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Jane Smith\",\n  \"email\": \"dr.jane@example.com\",\n  \"phone\": \"+1234567891\",\n  \"password\": \"password123\",\n  \"medicalLicenseNumber\": \"ML12345\",\n  \"licenseDocumentUrl\": \"https://example.com/license.pdf\",\n  \"specialization\": [\"Cardiology\", \"Internal Medicine\"],\n  \"qualifications\": \"MBBS, MD\",\n  \"experienceYears\": 10,\n  \"chamber\": {\n    \"name\": \"City Clinic\",\n    \"address\": \"123 Medical St\",\n    \"daysOpen\": [\"Monday\", \"Wednesday\", \"Friday\"],\n    \"hours\": \"9:00 AM - 5:00 PM\"\n  },\n  \"profilePhotoUrl\": \"https://example.com/photo.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/doctors/register",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register Doctor (With Hospital)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. John Doe\",\n  \"email\": \"dr.john@example.com\",\n  \"phone\": \"+1234567892\",\n  \"password\": \"password123\",\n  \"medicalLicenseNumber\": \"ML12346\",\n  \"licenseDocumentUrl\": \"https://example.com/license2.pdf\",\n  \"specialization\": [\"Pediatrics\"],\n  \"qualifications\": \"MBBS, DCH\",\n  \"experienceYears\": 5,\n  \"hospitalId\": \"HOSPITAL_ID_HERE\",\n  \"chamber\": {\n    \"name\": \"Hospital Clinic\",\n    \"address\": \"Hospital Address\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/doctors/register",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Doctor Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/doctors/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "DOCTOR_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hospital Registration",
+      "item": [
+        {
+          "name": "Register Hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"City General Hospital\",\n  \"email\": \"info@cityhospital.com\",\n  \"phone\": \"+1234567893\",\n  \"password\": \"password123\",\n  \"address\": \"456 Hospital Road, City\",\n  \"registrationNumber\": \"HOSP12345\",\n  \"documents\": [\"https://example.com/license.pdf\", \"https://example.com/certificate.pdf\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/hospitals/register",
+              "host": ["{{base_url}}"],
+              "path": ["hospitals", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - Approvals",
+      "item": [
+        {
+          "name": "Get Pending Items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pending",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "pending"]
+            }
+          }
+        },
+        {
+          "name": "Approve Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"All documents verified\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/approve/doctor/:doctorId",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "approve", "doctor", ":doctorId"],
+              "variable": [
+                {
+                  "key": "doctorId",
+                  "value": "DOCTOR_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Invalid license documents\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/reject/doctor/:doctorId",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reject", "doctor", ":doctorId"],
+              "variable": [
+                {
+                  "key": "doctorId",
+                  "value": "DOCTOR_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"All documents verified\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/approve/hospital/:hospitalId",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "approve", "hospital", ":hospitalId"],
+              "variable": [
+                {
+                  "key": "hospitalId",
+                  "value": "HOSPITAL_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Incomplete documentation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/reject/hospital/:hospitalId",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reject", "hospital", ":hospitalId"],
+              "variable": [
+                {
+                  "key": "hospitalId",
+                  "value": "HOSPITAL_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hospital - Doctor Management",
+      "item": [
+        {
+          "name": "Add Doctor (Auto-approved)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{hospital_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. New Doctor\",\n  \"email\": \"dr.new@example.com\",\n  \"phone\": \"+1234567894\",\n  \"password\": \"password123\",\n  \"medicalLicenseNumber\": \"ML12347\",\n  \"licenseDocumentUrl\": \"https://example.com/license3.pdf\",\n  \"specialization\": [\"Surgery\"],\n  \"qualifications\": \"MBBS, MS\",\n  \"experienceYears\": 8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/hospitals/:hospitalId/doctors",
+              "host": ["{{base_url}}"],
+              "path": ["hospitals", ":hospitalId", "doctors"],
+              "variable": [
+                {
+                  "key": "hospitalId",
+                  "value": "HOSPITAL_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hospital Doctors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{hospital_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/hospitals/:hospitalId/doctors",
+              "host": ["{{base_url}}"],
+              "path": ["hospitals", ":hospitalId", "doctors"],
+              "variable": [
+                {
+                  "key": "hospitalId",
+                  "value": "HOSPITAL_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Doctor (Hospital Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{hospital_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/hospitals/:hospitalId/approve/doctor/:doctorId",
+              "host": ["{{base_url}}"],
+              "path": ["hospitals", ":hospitalId", "approve", "doctor", ":doctorId"],
+              "variable": [
+                {
+                  "key": "hospitalId",
+                  "value": "HOSPITAL_ID_HERE"
+                },
+                {
+                  "key": "doctorId",
+                  "value": "DOCTOR_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "USER_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
